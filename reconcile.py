@@ -962,15 +962,6 @@ class ReconcileMixin:
     ) -> dict[int, int]:
         """Map current raw message objects back to store_ids in stable order.
 
-        ``stop_at_cross_source_gap`` is reserved for compaction, where mapping
-        a later active message across omitted history from another source could
-        advance the persisted frontier without lineage coverage. General
-        lookups retain suffix/partial-tail matching semantics.
-
-        ``covered_prefix_messages`` contains leading anchors intentionally
-        excluded from the returned mapping. Their replay identities may cover
-        matching stored rows before the first compactable message.
-
         Matching starts strictly after ``_last_compacted_store_id`` so repeated
         content from older already-compacted history cannot hijack the mapping.
         Synthetic summary messages simply fail to match and are skipped.  When
@@ -1089,9 +1080,6 @@ class ReconcileMixin:
                 ):
                     continue
                 candidate_source = str(candidate.get("source") or "unknown")
-                # Same-source partial-tail replay is an existing reconciliation
-                # contract. A source change is the hard boundary: the active
-                # surface cannot prove coverage for another surface's row.
                 if candidate_source != matched_source:
                     return False
             return True

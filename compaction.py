@@ -664,9 +664,6 @@ class CompactionMixin:
                     break
                 lineage_prefix_len += 1
             if lineage_prefix_len < len(candidate_raw):
-                # Fail closed at the first cross-source store gap. Messages
-                # after that gap stay active and must not be summarized into a
-                # node whose source_ids omit the intervening history.
                 fresh_tail_start = leading_anchor_count + lineage_prefix_len
                 candidate_raw = candidate_raw[:lineage_prefix_len]
             if not candidate_raw:
