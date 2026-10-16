@@ -1693,8 +1693,6 @@ def _looks_like_example_payload_ref(ref: str) -> bool:
 
 def _extract_unescaped_externalized_payload_refs(text: str, *, ignore_quoted_spans: bool = False) -> list[str]:
     refs: list[str] = []
-    # A real placeholder is one line. Scan actual and serialized lines
-    # independently so an incomplete prefix cannot consume a later real ref.
     segments = re.split(r"\n|\\n", text)
     for segment in segments:
         for pattern in (_INGEST_PLACEHOLDER_RE, _EXTERNALIZED_PAYLOAD_PLACEHOLDER_RE):
